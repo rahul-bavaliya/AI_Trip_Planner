@@ -76,14 +76,14 @@ class ModelLoader(BaseModel):
             AttributeError: If `config_loader` is None or missing required configuration keys.
         """
         if self.model_type == "groq":
-            return ChatGroq(
+            llm_model =  ChatGroq(
                 api_key=self.config_loader.groq_api_key,
                 model_name=self.config_loader.groq_model_name,
                 temperature=self.config_loader.groq_temperature,
                 max_tokens=self.config_loader.groq_max_tokens,
             )
         elif self.model_type == "openai":
-            return ChatOpenAI(
+            llm_model = ChatOpenAI(
                 api_key=self.config_loader.openai_api_key,
                 model_name=self.config_loader.openai_model_name,
                 temperature=self.config_loader.openai_temperature,
@@ -91,3 +91,5 @@ class ModelLoader(BaseModel):
             )
         else:
             raise ValueError(f"Unsupported model type: {self.model_type}")
+        
+        return llm_model
