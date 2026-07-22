@@ -8,7 +8,7 @@ import sys
 BASE_URL = "http://localhost:8000"  # Replace with your FastAPI server URL
 
 st.set_page_config(
-    page_title="🌏 Travel Planner Agentic App",
+    page_title="Travel Planner Agentic App",
     page_icon="🌏",  # You can use an emoji or a URL to an image
     layout="centered",
     initial_sidebar_state="expanded"
@@ -28,7 +28,7 @@ with st.form(key="query_form", clear_on_submit=True):
     input_user = st.text_area(
         "Enter your travel query:",
         placeholder="Ask me anything about your travel plans...",
-        height=150
+        height=250
     )
     button_submit = st.form_submit_button("Send")
 
