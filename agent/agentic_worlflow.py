@@ -4,7 +4,7 @@ from langgraph.graph import END, START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.graph.state import CompiledStateGraph
 
-from AI_Trip_Planner.prompt_library.prompt import SYSTEM_PROMPT
+from prompt_library.prompt import SYSTEM_PROMPT
 
 
 class GraphBuilder():
