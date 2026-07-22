@@ -10,23 +10,19 @@ class CurrencyConverterTool:
     
     """Initialize the CurrencyConverterTool with API key and setup tools"""
     def __init__(self):
-        # Load environment variables from .env file
-        load_dotenv()
-        
-        # Get the API key for currency conversion from environment variables
-        self.api_key = os.environ.get("EXCHANGE_RATE_API_KEY")
-        
         # CurrencyConverter instance for handling currency conversion logic
-        self.currency_service = CurrencyConverter(self.api_key)
+        self.currency_service = CurrencyConverter()
         
         # Setup tools for the currency converter tool
         self.currency_converter_tool_list = self._setup_tools()
 
+    """ Setup all tools for the currency converter tool"""
     def _setup_tools(self) -> List:
-        """Setup all tools for the currency converter tool"""
+        
+        # Tool for converting currency from one type to another
         @tool
         def convert_currency(amount:float, from_currency:str, to_currency:str):
-            """Convert amount from one currency to another"""
+            # Convert the amount from one currency to another using the CurrencyConverter service
             return self.currency_service.convert(amount, from_currency, to_currency)
-        
+        # Return the list of tools for the currency converter tool
         return [convert_currency]
