@@ -1,34 +1,38 @@
 import requests
+from logger.logging import get_logger
+
+logger = get_logger(__name__)
 
 class WeatherForecastTool:
-    def __init__(self, api_key:str):
-        self.api_key = api_key
-        self.base_url = "https://api.openweathermap.org/data/4.0"
+    def __init__(self, api_key: str = None):
+        # API key kept for signature compatibility if passed from caller
+        self.base_url = "https://api.weather.gc.ca/collections"
 
-    def get_current_weather(self, place:str):
-        """Get current weather of a place"""
+    def get_current_weather(self, place: str) -> dict:
+        """Get current realtime weather of a Canadian city/place"""
         try:
-            url = f"{self.base_url}/weather"
             params = {
                 "q": place,
-                "appid": self.api_key,
+                "f": "json",
+                "limit": 1
             }
-            response = requests.get(url, params=params)
+            url = f"{self.base_url}/citypageweather-realtime/items"
+            response = requests.get(url, params=params, timeout=10)
             return response.json() if response.status_code == 200 else {}
         except Exception as e:
-            raise e
-    
-    def get_forecast_weather(self, place:str):
-        """Get weather forecast of a place"""
+            logger.error(f"Error fetching current weather: {e}")
+            return {}
+
+    def get_forecast_weather(self, place: str) -> dict:
+        """Get forecast weather data of a Canadian city/place"""
         try:
-            url = f"{self.base_url}/forecast"
             params = {
                 "q": place,
-                "appid": self.api_key,
-                "cnt": 10,
-                "units": "metric"
+                "f": "json",
+                "limit": 1
             }
-            response = requests.get(url, params=params)
+            response = requests.get(self.base_url, params=params, timeout=10)
             return response.json() if response.status_code == 200 else {}
         except Exception as e:
-            raise e
+            logger.error(f"Error fetching forecast weather: {e}")
+            return {}

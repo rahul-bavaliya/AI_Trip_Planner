@@ -1,16 +1,18 @@
 import os
 from typing import Any, Literal, Optional
 from dotenv import load_dotenv
-
-### --
-# --- RUNTIME PATCH FOR PYDANTIC v2.10+ & LANGCHAIN INCOMPATIBILITY ---
 import pydantic.main
 
+# --- RUNTIME MONKEY PATCH FOR PYDANTIC / LANGCHAIN INCOMPATIBILITY ---
 _original_model_post_init = pydantic.main.BaseModel.model_post_init
 
 def _patched_model_post_init(self, *args, **kwargs):
-    # Intercepts extra positional arguments (_context) passed by langchain-core
-    return _original_model_post_init(self)
+    # Safely handle both positional context and keyword arguments
+    try:
+        return _original_model_post_init(self, *args, **kwargs)
+    except TypeError:
+        # Fallback if Pydantic signature differs across micro-versions
+        return _original_model_post_init(self)
 
 pydantic.main.BaseModel.model_post_init = _patched_model_post_init
 # ---------------------------------------------------------------------
