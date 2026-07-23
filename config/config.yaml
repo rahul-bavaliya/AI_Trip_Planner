@@ -6,6 +6,6 @@ llm:
     max_tokens: 1000
   groq:
     provider: "groq"
-    model_name: "groq/compound"
+    model_name: "llama-3.3-70b-versatile"
     temperature: 0.7
     max_tokens: 1000

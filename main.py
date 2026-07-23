@@ -1,25 +1,29 @@
 import os
+from typing import Any
 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-
-from agent.agentic_worlflow import GraphBuilder
-
+from agent.agentic_workflow import GraphBuilder
+from logger.logging import get_logger
 
 app = FastAPI()
+logger = get_logger(__name__)
 
 
 class QueryRequest(BaseModel):
     query: str
-    def __init__(self, query: str):
-        self.query = query
+
+    def model_post_init(self, __context: Any) -> None:
+        """Runs automatically right after field validation and init complete."""
+        logger.info("QueryRequest is initializing...")
+        logger.debug(f"query='{self.query}'")
         
 @app.post("/query")
 async def query_travel_agent(query: QueryRequest):
     try:
         # Print the received query for debugging purposes
-        print(f"Received query: {query.query}")
+        logger.debug(f"{query}")
         
         # Here generate the GraphBuilder
         graph = GraphBuilder(model_provider="groq")
@@ -29,10 +33,10 @@ async def query_travel_agent(query: QueryRequest):
         with open("my_graph.png", "wb") as f:
             f.write(png_graph)
             
-        print(f"Graph generated and saved as my_graph.png in {os.getcwd()}")
+        logger.debug(f"Graph generated and saved as my_graph.png in {os.getcwd()}")
         
         # Assuming request is a pydantic object like: {"question": "What is the weather in Paris?"}
-        messages = {"messages": [query.question]}
+        messages = {"messages": [query.query]}
         
         # Output from the react app
         output = react_app.invoke(messages)
