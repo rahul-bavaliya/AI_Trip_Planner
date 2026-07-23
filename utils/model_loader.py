@@ -112,5 +112,5 @@ class ModelLoader:
         else:
             raise ValueError(f"Unsupported model type: {self.model_provider}")
 
-        logger.debug(f"Successfully loaded model instance: {llm_model}")
+        logger.debug(f"Successfully loaded model instance**")
         return llm_model

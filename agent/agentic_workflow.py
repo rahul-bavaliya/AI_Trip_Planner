@@ -39,18 +39,18 @@ class GraphBuilder:
         graph_builder = StateGraph(MessagesState)
 
         # 1. Add Nodes
-        graph_builder.add_node("agent", self.agent_function)
+        graph_builder.add_node("main_agent", self.agent_function)
         graph_builder.add_node("tools", ToolNode(tools=self.tools))
 
         # 2. Add Flow Edges
-        graph_builder.add_edge(START, "agent")
+        graph_builder.add_edge(START, "main_agent")
 
         # Automatically routes to 'tools' if the LLM generated a tool call,
         # or routes to END if the LLM produced a final text answer.
-        graph_builder.add_conditional_edges("agent", tools_condition)
+        graph_builder.add_conditional_edges("main_agent", tools_condition)
 
         # Send tool results back to the agent node
-        graph_builder.add_edge("tools", "agent")
+        graph_builder.add_edge("tools", "main_agent")
 
         # Compile and store graph
         self.graph = graph_builder.compile()
